@@ -1,0 +1,571 @@
+---
+title: "Master Chronology Development"
+author: "Jen Baron, j.baron@alumni.ubc.ca, UBC Tree Ring Lab"
+date: 'April 1, 2020'
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    toc_depth: 3  # upto three depths of headings (specified by #, ## and ###)
+    number_sections: true  ## if you want number sections at each table header
+    theme: sandstone
+---
+
+
+# Packages
+
+```{r setup}
+library(dplR) # dendrochronology
+library(tidyr)
+library(dplyr)
+library(ggplot2)
+library(corrplot)
+library(stringr)
+```
+
+
+# Read in Data 
+
+![Locations of Chronologies](figures/chronologies.jpg)
+
+
+## Cook - Longfellow Trail - PIST - ITRDB PA008
+
+NOAA Study Page: https://www.ncdc.noaa.gov/paleo-search/study/2993
+
+Chronology file name   : PA008.CRN
+Measurement file name  : PA008.RWL  
+Date checked           : 02DEC94
+Technician's name      : MARIETTE SEKLECKI
+Supervisor's name      : HENRI D. GRISSINO-MAYER
+Beginning year         : 1679
+Ending year            : 1981
+Principal investigators: ED COOK
+Site name              : LONGFELLOW TRAIL
+Site location          : PENNSYLVANIA, USA
+Species information    : PIST WHITE PINE
+Latitude               : 4120N 
+Longitude              : 7912W 
+Elevation              : N/A M
+Series intercorrelation: 0.658
+Avg mean sensitivity   : 0.211
+Avg standard deviation : 0.591
+Avg autocorrelation    : 0.856
+Number dated series    : 24
+Segment length tested  : 50
+Number problem segments: 0
+Pct problem segments   : 0.00
+
+Are there obvious misdated series? NO
+Number possible misdated series  : N/A
+Percent misdated series          : 0.00
+
+Comments: 
+NO ELEVATION GIVEN
+EXELLENT HIGH QUALITY CHRONOLOGY
+
+
+```{r}
+pa008.crn <- read.crn("data/pa008.crn")
+crn.plot(pa008.crn, add.spline = TRUE, nyrs=30)
+
+pa008.rwl <- read.rwl("data/pa008.rwl")
+rwl.report(pa008.rwl)
+seg.plot(pa008.rwl)
+```
+
+
+## Guyette - Dividing Lake - PIST - ITRDB CANA127
+
+NOAA Study Page: https://www.ncdc.noaa.gov/paleo-search/study/3448
+
+Chronology file name   : CANA127.CRN
+Measurement file name  : CANA127.RWL
+Date checked           : 17JUL96
+Technician's name      : MARIETTE SEKLECKI
+Supervisor's name      : HENRI D. GRISSINO-MAYER
+Beginning year         : 1662
+Ending year            : 1994
+Principal investigators: R.P. GUYETTE
+Site name              : DIVIDING LAKE
+Site location          : ONTARIO, CANADA
+Species information    : PIST EASTERN WHITE PINE
+Latitude               : 4525N 
+Longitude              : 7836W 
+Elevation              : 500 M
+Series intercorrelation: 0.572
+Avg mean sensitivity   : 0.209
+Avg standard deviation : 0.648
+Avg autocorrelation    : 0.828
+Number dated series    : 47
+Segment length tested  : 50
+Number problem segments: 34
+Pct problem segments   : 8.15
+
+Are there obvious misdated series? YES
+Number possible misdated series  : 3
+Percent misdated series          : 6.38
+Do they affect chronology quality? N/A
+Recommend withhold from ITRDB?     N/A
+
+Comments: 
+#4 DLW04B, #5 DLW05B, #40 DLW19A ARE MISDATED
+#8 DLW09A 1736-1849, #32 LDW09B 1741-1824 HAVE LOW CORRELATIONS
+DATA SET COULD BE IMPROVED
+
+```{r}
+cana127.crn <- read.crn("data/cana127.crn")
+crn.plot(cana127.crn, add.spline = TRUE, nyrs=30)
+
+cana127.rwl <- read.rwl("data/cana127.rwl")
+rwl.report(cana127.rwl)
+seg.plot(cana127.rwl)
+```
+
+## Guyette - Dividing Lake Aquatic - PIST - ITRDB CANA148
+
+NOAA Study Page: https://www.ncdc.noaa.gov/paleo-search/study/3449
+
+Chronology file name   : CANA148.CRN
+Measurement file name  : CANA148.RWL
+Date checked           : 14MAR05
+Checked by             : H. ADAMS AND J. LUKAS
+Beginning year         :  950
+Ending year            : 1993
+Principal investigators: R.P. GUYETTE, B. COLE                         
+Site name              : DIVIDING LAKE AQUATIC
+Site location          : CANADA       
+Species information    : PIST EASTERN WHITE PINE
+Latitude               :   4524
+Longitude              : -07836
+Elevation              :  400M
+
+Series intercorrelation: 0.561
+Avg mean sensitivity   : 0.182
+Avg standard deviation : 0.589
+Avg autocorrelation    : 0.862
+Number dated series    : 50
+Segment length tested  : 50
+
+Number problem segments: 29
+Pct problem segments   : 8.22
+
+```{r}
+cana148.crn <- read.crn("data/cana148.crn")
+crn.plot(cana148.crn, add.spline = TRUE, nyrs=30)
+
+cana148.rwl <- read.rwl("data/cana148.rwl")
+rwl.report(cana148.rwl)
+seg.plot(cana148.rwl)
+```
+
+## Wyse - Platte Plains - PIST - ITRDB MI015
+
+NOAA Study Page: https://www.ncdc.noaa.gov/paleo/study/5358
+
+Platte Plains, Michigan Pinus strobus - MI015
+Additional Site Information
+Thomas C. Wyse, P. Charles Goebel
+
+Purpose of Collection:  
+Forest disturbance history and recruitment patterns.  
+
+Cores are stored at: 
+Forest Ecosystem Restoration & Ecology School of Natural Resources OARDC 
+The Ohio State University 1680 Madison Avenue Wooster, OH 44691-4096
+
+Description:
+The site is a sandy lake plain adjacent to Lake Michigan in northwest lower Michigan.  
+These cores were used with others to investigate forest disturbance history and recruitment patterns.  
+All ring width measurements were done with WinDENDRO.  Cores were visually cross dated, 
+and the cross dating was verified with COFECHA.
+
+```{r}
+mi015.rwl <- read.rwl("data/mi015.rwl")
+rwl.report(mi015.rwl)
+seg.plot(mi015.rwl)
+```
+
+
+
+
+# Create Master Chronology
+
+
+## Join Chronologies
+
+
+Series summary:
+
+- pa008: 24 series; format 058xxx
+- cana127: 47 series; format dlw 00x
+- cana148: 50 series; format DLA 00x
+- mi015: 21 series; format 00-0
+
+
+```{r}
+master.rwl <- combine.rwl(list(pa008.rwl, cana127.rwl,cana148.rwl, mi015.rwl))
+rwl.report(master.rwl)
+```
+
+
+## Initial Removal of Series
+
+Remove chronologies known to be misdated, problematic, or are much older than the rest of the series
+
+4 DLW04B, #5 DLW05B, #40 DLW19A ARE MISDATED
+8 DLW09A 1736-1849, #32 LDW09B 1741-1824 HAVE LOW CORRELATIONS
+
+```{r}
+master.stats <- rwl.stats(master.rwl) #calculate statistics
+old <- filter(master.stats, first < 1600) #filter for start date
+old$series #generates list of old series to remove
+```
+
+
+
+```{r}
+master.rwl <- master.rwl %>% select(-DLW04B, -dlw05b, -dlw19a, #misdated
+                                    -DLW09A, -dlw09b, #low correlations
+                                    -DLA060, -DLA066, -DLA068, -DLA064, -DLA65B, -DLA63, -DLA088,
+                                    -DLA007, -dla100, -DLA069, -DLA109, -DL122B, -DLA044, -DLA111, 
+                                    -DLA104, -DLA057, -DLA056, -DLA122 #start before 1600
+                                    )
+```
+
+
+### Write RWL to file
+```{r}
+write.rwl(master.rwl, "outputs/master_all.rwl", format = "tucson")
+```
+
+
+## Plot Series & Correlate
+
+Series summary:
+
+- pa008: 24 series (20%); format 058xxx
+- cana127: 47-5 = 42 series (35%); format dlw 00x
+- cana148: 50-18 = 32 series (27%); format DLA 00x
+- mi015: 21 series (18%); format 00-0
+
+```{r}
+rwl.report(master.rwl)
+seg.plot(master.rwl, xlim=c(1600,2010))
+master.stats <- rwl.stats(master.rwl)
+```
+
+```{r}
+corr.master <- corr.rwl.seg(master.rwl, xlim=c(1600,2010))
+```
+
+
+```{r}
+flags <- as.data.frame(corr.master$flags)
+head(flags)
+overall <- corr.master$overall
+head(overall)
+avg.seg.rho <- as.data.frame(corr.master$avg.seg.rho)
+tail(avg.seg.rho)
+```
+
+There is (at least) one other way of looking at the average interseries correlation of a data set. The interseries.cor function in dplR gives a measure of average interseries correlation that is different from the rbar measurements from rwi.stats. In this function, correlations are calculated serially between each tree-ring series and a master chronology built from all the other series in the rwl object (leave-one-out principle).
+
+```{r}
+master.cor <- interseries.cor(master.rwl)
+head(master.cor)
+```
+
+
+## Adjust Sample Size
+
+Right now, there are a disproportionate number of samples from the cana sites, despite the three sites all being approximatly equal distance from the Pinery. I'm going to remove the samples that correlate the weakest with the rest of the chronology so that it is more representative and not bias by one location. I'll do this iteratively, by removing series based on a cutoff in groups and then re-computing the correlations. 
+
+Series summary:
+
+- pa008: 24 series (20%); format 058xxx
+- cana127: 47-5 = 42 series (35%); format dlw 00x
+- cana148: 50-18 = 32 series (27%); format DLA 00x
+- mi015: 21 series (18%); format 00-0
+
+
+### Remove Flags
+
+Remove flags, only from cana sites for now because of the disproportionate number of samples
+
+```{r}
+flags <- tibble::rownames_to_column(flags, "sample") #add years from row names
+str(flags)
+flags.cana <- flags %>% filter(str_detect(sample, fixed('dl', ignore_case=TRUE)))
+flags.cana$sample
+```
+
+
+Remove from RWL file
+
+```{r}
+#Remove flags
+master.rwl <- master.rwl %>% select(-dlw02a, -dlw12a, -dlw17a, -dlw24b, -dlw12b, -dlw24a, -DLA020, -DLA008, -DLA105)
+
+#Re-compute correlation
+master.cor <- interseries.cor(master.rwl)
+```
+
+
+### Remove by Correlation 
+
+
+```{r}
+master.cor <- tibble::rownames_to_column(master.cor, "sample") #add years from row names
+
+#Correlations for each site
+master.cor.pa008 <- master.cor %>% filter(str_detect(sample, '^058'))
+master.cor.cana127 <- master.cor %>% filter(str_detect(sample, fixed('dlw', ignore_case=TRUE)))
+master.cor.cana148 <- master.cor %>% filter(str_detect(sample, fixed('dla', ignore_case=TRUE)))
+master.cor.mi015 <- master.cor %>% filter(str_detect(sample, '-'))
+
+#Correlations for both Cana sites
+master.cor.cana <- master.cor %>% filter(str_detect(sample, fixed('dl', ignore_case=TRUE))) 
+master.cor.cana %>% arrange(res.cor)
+
+#Filter based on correlation
+master.cor.cana.low <- master.cor.cana %>% filter(res.cor < 0.51) #cutoff correlation of 0.51
+master.cor.cana.low$sample
+```
+
+Remove from RWL file
+
+```{r}
+#Remove low correlations
+master.rwl <- master.rwl %>% select(-dlw01a, -dlw10a, -dlw14a, -dlw16a, -dlw18b, -dlw029, 
+                                    -dlw01b, -dlw14b, -dlw22a, -DLW25A, -dlw26a, -dlw28a, 
+                                    -DLA025, -DLA014, -DLA024, -DLA011, -DLA013, -DLA018, 
+                                    -DLA012, -DLA005, -DLA03, -DLA098, -DLA107, -DLA075,
+                                    -DLA128, -DLA131)
+#Re-compute correlations
+master.cor <- interseries.cor(master.rwl)
+```
+
+### Repeat Removal by Correlation
+
+Series summary:
+
+- pa008: 24 series; format 058xxx
+- cana127: 24 series; format dlw 00x
+- cana148: 15 series; format DLA 00x
+- mi015: 21 series; format 00-0
+
+```{r}
+master.cor <- tibble::rownames_to_column(master.cor, "sample") #add years from row names
+
+#Correlations for each site
+master.cor.cana127 <- master.cor %>% filter(str_detect(sample, fixed('dlw', ignore_case=TRUE)))
+master.cor.cana148
+master.cor.cana148 <- master.cor %>% filter(str_detect(sample, fixed('dla', ignore_case=TRUE)))
+
+#Correlations for both Cana sites
+master.cor.cana <- master.cor %>% filter(str_detect(sample, fixed('dl', ignore_case=TRUE))) 
+master.cor.cana %>% arrange(res.cor)
+
+#Filter based on correlation
+master.cor.cana.low <- master.cor.cana %>% filter(res.cor < 0.50) #cutoff correlation of 0.50
+master.cor.cana.low$sample
+```
+
+Remove from RWL file
+
+```{r}
+#Remove low correlations
+master.rwl <- master.rwl %>% select(-dlw03a, dlw13a, -dlw15a, -dlw19b, -dlw03b, 
+                                    -dlw07b, -dlw15b, -dlw16b, -dlw17b, -dlw18a, 
+                                    -DLA023, -DLA022, -DLA047, -DLA101, -DLA050)
+#Re-compute correlations
+master.cor <- interseries.cor(master.rwl)
+```
+
+
+## Refine Master Chronology (Correlation & Flags)
+
+### First Iteration
+
+Series summary:
+
+- pa008: 24 series (34%); format 058xxx
+- cana127: 15 series (21%); format dlw 00x
+- cana148: 10 series (14%); format DLA 00x
+- mi015: 21 series (30%); format 00-0
+
+Now that the three locations all comprise ~33% of the samples in the master chronology, I'm going to look for any samples with low correlations or that flag to remove. 
+
+```{r}
+master.cor <- tibble::rownames_to_column(master.cor, "sample") #add years from row names
+master.cor %>% arrange(res.cor)
+```
+
+
+```{r}
+corr.master <- corr.rwl.seg(master.rwl, xlim=c(1600,2010))
+```
+
+
+```{r}
+flags <- as.data.frame(corr.master$flags)
+flags
+```
+
+Here I'm remove any samples that both have a flag/correlate poorly while ensuring proportional sample sizes. 
+
+The mi015 samples have the lowest correlations, but they are the most recent and still are adequete so I'm not removing many of them.
+
+Remove from RWL file
+
+```{r}
+#Remove low flags/correlations
+master.rwl <- master.rwl %>% select(-"058211", -"33-1", -"058122", -"13-3", -dlw11c, -DLA130, -"058121", -"058122", -"058141", -DLA015, -DLA126, -DLA130)
+
+#Re-compute correlations
+master.cor <- interseries.cor(master.rwl)
+master.cor <- tibble::rownames_to_column(master.cor, "sample") #add years from row names
+```
+
+
+### Second Iteration
+
+Locations of Samples:
+
+- pa008: 20 series (33%); format 058xxx
+- cana127: 14 series (23%); format dlw 00x
+- cana148: 7 series (12%); format DLA 00x
+- mi015: 19 series (31%); format 00-0
+
+```{r}
+corr.master <- corr.rwl.seg(master.rwl, xlim=c(1600,2010))
+
+flags <- as.data.frame(corr.master$flags)
+flags
+```
+
+The two samples from cana148 flagging are older and can be removed
+
+```{r}
+#Remove flags/low correlations
+master.rwl <- master.rwl %>% select(-"058202", -DLA067, -DLA041)
+
+#Re-compute correlations
+master.cor <- interseries.cor(master.rwl)
+master.cor <- tibble::rownames_to_column(master.cor, "sample") #add years from row names
+```
+
+
+## Summary of Master Chronology
+
+Series summary:
+
+- pa008: 19 series (33%); format 058xxx
+- cana127: 14 series (24%); format dlw 00x
+- cana148: 5 series (9%); format DLA 00x
+- mi015: 19 series (33%); format 00-0
+
+
+```{r}
+rwl.report(master.rwl)
+```
+
+As compared to the initial report:
+
+- Number of dated series: 142 
+- Number of measurements: 27695 
+- Avg series length: 195.0352 
+- Range:  1053 
+- Span:  950 - 2002 
+- Mean (Std dev) series intercorrelation: 0.4408118 (0.1237108)
+- Mean (Std dev) AR1: 0.8146479 (0.1121976)
+
+```{r}
+seg.plot(master.rwl, xlim=c(1675,2010))
+```
+
+```{r}
+corr.master <- corr.rwl.seg(master.rwl, xlim=c(1675,2005))
+```
+
+```{r}
+avg.seg.rho <- as.data.frame(corr.master$avg.seg.rho)
+tail(avg.seg.rho)
+```
+
+
+### Write RWL to file
+
+```{r}
+write.rwl(master.rwl, "outputs/master.rwl", format = "tucson")
+```
+
+
+
+## Detrend
+
+Probably the most common method for detrending is what is often called the “conservative” approach of attempting to fit a negative exponential curve
+to a series. In the dplR implementation the "ModNegExp" method of detrend attempts to fit a classic nonlinear model of biological growth of the form f(t) = a exp(bt) + k, where the argument of the function is time, using nls.
+
+```{r}
+master.rwi <- detrend(rwl = master.rwl, method = "ModNegExp")
+```
+
+
+### Compute Statistics
+
+Can also be done with a moving window
+
+```{r}
+rwi.stats(master.rwi)
+```
+
+
+### Build Chronology
+
+```{r}
+master.crn <- chron(master.rwi)
+plot(master.crn, add.spline=TRUE, nyrs=30, xlim=c(1675,2010))
+```
+
+### Add Uncertainty Estimates
+
+```{r}
+master.avg <- apply(master.rwi,1,mean,na.rm=TRUE)
+
+yrs <- time(master.crn)
+
+
+se <- function(x){
+  x2 <- na.omit(x)
+  n <- length(x2)
+  sd(x2)/sqrt(n)}
+
+
+master.se <- apply(master.rwi,1,se)
+
+master.sd <- apply(master.rwi,1,sd,na.rm=TRUE)
+
+par(mar = c(2, 2, 2, 2), mgp = c(1.1, 0.1, 0), tcl = 0.25, xaxs='i')
+
+plot(yrs, master.avg, type = "n", xlab = "Year", ylab = "RWI", axes=FALSE, xlim=c(1675,2010))
+xx <- c(yrs,rev(yrs))
+yy <- c(master.avg+master.se*2,rev(master.avg-master.se*2))
+polygon(xx,yy,col="grey80",border = NA)
+lines(yrs, master.avg, col = "black")
+lines(yrs, ffcsaps(master.avg, nyrs = 30), col = "red", lwd = 2)
+axis(1); axis(2); axis(3); axis(4)
+box()
+```
+
+
+# Conclude Session
+
+```{r}
+sessionInfo()
+```
+
+
+
+
