@@ -4,6 +4,7 @@ author: "Jen Baron, j.baron@alumni.ubc.ca, UBC Tree Ring Lab"
 date: 'April 1, 2020'
 output:
   html_document:
+    keep_md: true
     toc: true
     toc_float: true
     toc_depth: 3  # upto three depths of headings (specified by #, ## and ###)
