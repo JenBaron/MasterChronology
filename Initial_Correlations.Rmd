@@ -1,0 +1,355 @@
+---
+title: "Master Chronology Development - Initial Correlations"
+author: "Jen Baron, j.baron@alumni.ubc.ca, UBC Tree Ring Lab"
+date: 'Created February 11, 2020; Last Updated March 6, 2020'
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    toc_depth: 3  # upto three depths of headings (specified by #, ## and ###)
+    number_sections: true  ## if you want number sections at each table header
+    theme: sandstone
+---
+
+
+# Packages
+
+```{r setup}
+library(dplR) # dendrochronology
+library(tidyr)
+library(dplyr)
+library(ggplot2)
+library(Hmisc) #for correlation matrix
+library(corrplot)
+library(stringr)
+```
+
+
+# Read in Data 
+
+![Locations of Chronologies](figures/chronologies.jpg)
+
+
+## Cook - Longfellow Trail - PIST - ITRDB PA008
+
+NOAA Study Page: https://www.ncdc.noaa.gov/paleo-search/study/2993
+
+Chronology file name   : PA008.CRN
+Measurement file name  : PA008.RWL  
+Date checked           : 02DEC94
+Technician's name      : MARIETTE SEKLECKI
+Supervisor's name      : HENRI D. GRISSINO-MAYER
+Beginning year         : 1679
+Ending year            : 1981
+Principal investigators: ED COOK
+Site name              : LONGFELLOW TRAIL
+Site location          : PENNSYLVANIA, USA
+Species information    : PIST WHITE PINE
+Latitude               : 4120N 
+Longitude              : 7912W 
+Elevation              : N/A M
+Series intercorrelation: 0.658
+Avg mean sensitivity   : 0.211
+Avg standard deviation : 0.591
+Avg autocorrelation    : 0.856
+Number dated series    : 24
+Segment length tested  : 50
+Number problem segments: 0
+Pct problem segments   : 0.00
+
+Are there obvious misdated series? NO
+Number possible misdated series  : N/A
+Percent misdated series          : 0.00
+
+Comments: 
+NO ELEVATION GIVEN
+EXELLENT HIGH QUALITY CHRONOLOGY
+
+
+```{r}
+pa008.crn <- read.crn("data/pa008.crn")
+crn.plot(pa008.crn, add.spline = TRUE, nyrs=30)
+
+pa008.rwl <- read.rwl("data/pa008.rwl")
+rwl.report(pa008.rwl)
+seg.plot(pa008.rwl)
+```
+
+
+## Guyette - Dividing Lake - PIST - ITRDB CANA127
+
+NOAA Study Page: https://www.ncdc.noaa.gov/paleo-search/study/3448
+
+Chronology file name   : CANA127.CRN
+Measurement file name  : CANA127.RWL
+Date checked           : 17JUL96
+Technician's name      : MARIETTE SEKLECKI
+Supervisor's name      : HENRI D. GRISSINO-MAYER
+Beginning year         : 1662
+Ending year            : 1994
+Principal investigators: R.P. GUYETTE
+Site name              : DIVIDING LAKE
+Site location          : ONTARIO, CANADA
+Species information    : PIST EASTERN WHITE PINE
+Latitude               : 4525N 
+Longitude              : 7836W 
+Elevation              : 500 M
+Series intercorrelation: 0.572
+Avg mean sensitivity   : 0.209
+Avg standard deviation : 0.648
+Avg autocorrelation    : 0.828
+Number dated series    : 47
+Segment length tested  : 50
+Number problem segments: 34
+Pct problem segments   : 8.15
+
+Are there obvious misdated series? YES
+Number possible misdated series  : 3
+Percent misdated series          : 6.38
+Do they affect chronology quality? N/A
+Recommend withhold from ITRDB?     N/A
+
+Comments: 
+#4 DLW04B, #5 DLW05B, #40 DLW19A ARE MISDATED
+#8 DLW09A 1736-1849, #32 LDW09B 1741-1824 HAVE LOW CORRELATIONS
+DATA SET COULD BE IMPROVED
+
+```{r}
+cana127.crn <- read.crn("data/cana127.crn")
+crn.plot(cana127.crn, add.spline = TRUE, nyrs=30)
+
+cana127.rwl <- read.rwl("data/cana127.rwl")
+rwl.report(cana127.rwl)
+seg.plot(cana127.rwl)
+```
+
+## Guyette - Dividing Lake Aquatic - PIST - ITRDB CANA148
+
+NOAA Study Page: https://www.ncdc.noaa.gov/paleo-search/study/3449
+
+Chronology file name   : CANA148.CRN
+Measurement file name  : CANA148.RWL
+Date checked           : 14MAR05
+Checked by             : H. ADAMS AND J. LUKAS
+Beginning year         :  950
+Ending year            : 1993
+Principal investigators: R.P. GUYETTE, B. COLE                         
+Site name              : DIVIDING LAKE AQUATIC
+Site location          : CANADA       
+Species information    : PIST EASTERN WHITE PINE
+Latitude               :   4524
+Longitude              : -07836
+Elevation              :  400M
+
+Series intercorrelation: 0.561
+Avg mean sensitivity   : 0.182
+Avg standard deviation : 0.589
+Avg autocorrelation    : 0.862
+Number dated series    : 50
+Segment length tested  : 50
+
+Number problem segments: 29
+Pct problem segments   : 8.22
+
+```{r}
+cana148.crn <- read.crn("data/cana148.crn")
+crn.plot(cana148.crn, add.spline = TRUE, nyrs=30)
+
+cana148.rwl <- read.rwl("data/cana148.rwl")
+rwl.report(cana148.rwl)
+seg.plot(cana148.rwl)
+```
+
+## Wyse - Platte Plains - PIST - ITRDB MI015
+
+NOAA Study Page: https://www.ncdc.noaa.gov/paleo/study/5358
+
+Platte Plains, Michigan Pinus strobus - MI015
+Additional Site Information
+Thomas C. Wyse, P. Charles Goebel
+
+Purpose of Collection:  
+Forest disturbance history and recruitment patterns.  
+
+Cores are stored at: 
+Forest Ecosystem Restoration & Ecology School of Natural Resources OARDC 
+The Ohio State University 1680 Madison Avenue Wooster, OH 44691-4096
+
+Description:
+The site is a sandy lake plain adjacent to Lake Michigan in northwest lower Michigan.  
+These cores were used with others to investigate forest disturbance history and recruitment patterns.  
+All ring width measurements were done with WinDENDRO.  Cores were visually cross dated, 
+and the cross dating was verified with COFECHA.
+
+```{r}
+mi015.rwl <- read.rwl("data/mi015.rwl")
+rwl.report(mi015.rwl)
+seg.plot(mi015.rwl)
+```
+
+Detrend all series (with ModNegExp)
+```{r}
+mi015.rwi <- detrend(rwl = mi015.rwl, method = "ModNegExp")
+```
+
+Build Chronology
+```{r}
+mi015.crn <- chron(mi015.rwi)
+plot(mi015.crn, add.spline=TRUE, nyrs=30)
+```
+
+
+# Compare Chronologies 
+
+## Extract 
+
+```{r}
+pa008 <- tibble::rownames_to_column(pa008.crn, "year") #add years from row names
+pa008$year <- as.numeric(pa008$year) #year as a numeric
+names(pa008)[names(pa008)=="STNDRD"] <- "pa008" #re-name values as data files
+pa008 <- select(pa008, -samp.depth) #remove sample depth
+str(pa008)
+
+cana127 <- tibble::rownames_to_column(cana127.crn, "year") #add years from row names
+cana127$year <- as.numeric(cana127$year)
+names(cana127)[names(cana127)=="dlwSTD"] <- "cana127" #re-name values as data files
+cana127 <- select(cana127, -samp.depth)
+str(cana127)
+
+cana148 <- tibble::rownames_to_column(cana148.crn, "year") #add years from row names
+cana148$year <- as.numeric(cana148$year)
+names(cana148)[names(cana148)=="DLAQUS"] <- "cana148" #re-name values as data files
+cana148 <- select(cana148, -samp.depth)
+str(cana148)
+
+mi015 <- tibble::rownames_to_column(mi015.crn, "year") #add years from row names
+mi015$year <- as.numeric(mi015$year)
+names(mi015)[names(mi015)=="xxxstd"] <- "mi015" #re-name values as data files
+mi015 <- select(mi015, -samp.depth)
+str(mi015)
+```
+
+## Filter for Common Date
+
+```{r}
+pa008 <- filter(pa008, year > 1678)
+cana127 <- filter(cana127, year > 1678)
+cana148 <- filter(cana148, year > 1678)
+mi015 <- filter(mi015, year > 1678)
+```
+
+
+## Join Data
+
+```{r}
+all.crn <- pa008 %>% #in matrix format
+  full_join(cana127, by = "year") %>%
+  full_join(cana148, by = "year") %>%
+  full_join(mi015, by = "year") 
+
+tidy.crn <- gather(all.crn, "source", "std", 2:5) #in tidy format
+```
+
+
+## Plot
+
+
+
+```{r}
+
+#Since 1850
+ggplot(tidy.crn, aes(x=year, y=std, col = source)) +
+  geom_line(alpha = 0.5) +
+  #facet_grid(source ~ .) +
+  scale_x_continuous(limits = c(1850, 2010)) +
+  theme_classic() 
+
+#Since 1850
+ggplot(tidy.crn, aes(x=year, y=std, col = source)) +
+  geom_line(alpha = 0.5) +
+  theme_classic() 
+
+#Without mi015
+ggplot(data=(tidy.crn %>% filter(source != "mi015")), aes(x=year, y=std, col = source)) +
+  geom_line(alpha = 0.5) +
+  theme_classic() 
+```
+
+
+## Correlation Matrix
+
+Using description & code from: http://www.sthda.com/english/wiki/correlation-matrix-a-quick-start-guide-to-analyze-format-and-visualize-a-correlation-matrix-using-r-software
+
+### All Chronologies (1912-1993)
+
+```{r}
+matrix <- filter(all.crn, year > 1911, year < 1994)
+matrix <- select(all.crn, -year)
+```
+
+```{r}
+cor.crn <- rcorr(as.matrix(matrix))
+cor.crn
+```
+
+```{r}
+# flattenCorrMatrix Function
+# cormat : matrix of the correlation coefficients
+# pmat : matrix of the correlation p-values
+flattenCorrMatrix <- function(cormat, pmat) {
+  ut <- upper.tri(cormat)
+  data.frame(
+    row = rownames(cormat)[row(cormat)[ut]],
+    column = rownames(cormat)[col(cormat)[ut]],
+    cor  =(cormat)[ut],
+    p = pmat[ut]
+    )
+}
+```
+
+**Results**
+
+```{r}
+as_tibble(flattenCorrMatrix(cor.crn$r %>% round(2), cor.crn$P %>% round(3)))
+```
+
+**Correlation plot, blank if correlation is insignificant**
+
+```{r}
+corrplot(cor.crn$r, type="upper", order="hclust", 
+         p.mat = cor.crn$P, sig.level = 0.05, insig = "blank", tl.col = "black")
+```
+
+### Older Chronologies (-mi015, 1679-1982)
+
+```{r}
+matrix2 <- filter(all.crn, year < 1982)
+matrix2 <- select(all.crn, -year, -mi015)
+```
+
+```{r}
+cor.crn2 <- rcorr(as.matrix(matrix2))
+cor.crn2
+```
+
+**Results**
+
+```{r}
+as_tibble(flattenCorrMatrix(cor.crn2$r %>% round(2), cor.crn2$P))
+```
+
+**Correlation plot, blank if correlation is insignificant **
+
+```{r}
+corrplot(cor.crn2$r, type="upper", order="hclust", 
+         p.mat = cor.crn2$P, sig.level = 0.05, insig = "blank", tl.col = "black")
+```
+
+
+```{r}
+sessionInfo()
+```
+
+
+
+
